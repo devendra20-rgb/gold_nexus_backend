@@ -1,0 +1,37 @@
+const express = require("express");
+const cors = require("cors");
+const authRoutes = require("./routes/authRoutes");
+const metalPriceRoutes = require("./routes/metalPriceRoutes");
+const currencyRoutes = require("./routes/currencyRoutes");
+
+const app = express();
+
+app.use(express.json());
+
+const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:3000")
+  .split(",")
+  .map((o) => o.trim());
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"), false);
+    },
+    credentials: true
+  })
+);
+
+// Health check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/metal-prices", metalPriceRoutes);
+app.use("/api/currency", currencyRoutes);
+
+module.exports = app;
