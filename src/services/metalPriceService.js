@@ -1,4 +1,5 @@
 const MetalPrice = require("../models/MetalPrice");
+const { fetchCurrencyRates } = require("./currencyService");
 
 /**
  * Create a new metal price entry (admin side - Edit Prices)
@@ -128,6 +129,39 @@ async function deleteMetalPrice(id) {
   await MetalPrice.findByIdAndDelete(id);
 }
 
+const currencyMap = {
+  IN: "INR",
+  US: "USD",
+  AE: "AED",
+  UK: "GBP",
+};
+
+async function createMetalPrice({
+  country,
+  stateOrRegion,
+  metalType,
+  pricePerGram,
+  effectiveAt,
+}) {
+  if (country === "IN" && !stateOrRegion) {
+    stateOrRegion = "Delhi";
+  }
+
+  const currency = currencyMap[country] || "USD";
+
+  const doc = await MetalPrice.create({
+    country,
+    stateOrRegion: stateOrRegion || null,
+    metalType,
+    pricePerGram,
+    currency,
+    effectiveAt: effectiveAt || new Date(),
+  });
+
+  return doc;
+}
+
+
 module.exports = {
   createMetalPrice,
   getLatestPrice,
@@ -135,4 +169,5 @@ module.exports = {
   getPriceHistory,
   updateMetalPrice,
   deleteMetalPrice,
+  fetchCurrencyRates
 };

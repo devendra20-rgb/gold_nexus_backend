@@ -18,7 +18,7 @@ const MetalPriceSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      required: true
+      required: false
     },
     pricePerGram: {
       type: Number,
