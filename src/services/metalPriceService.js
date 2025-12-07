@@ -117,12 +117,25 @@ async function getPriceHistory({
 /**
  * Update an existing price (history edit).
  */
-async function updateMetalPrice(id, updateData) {
-  const doc = await MetalPrice.findByIdAndUpdate(id, updateData, {
-    new: true,
+async function updateMetalPrice(id, { pricePerGram }) {
+  const oldDoc = await MetalPrice.findById(id);
+
+  if (!oldDoc) throw new Error("Original record not found");
+
+  // Create NEW record for versioning / history
+  const newDoc = await MetalPrice.create({
+    country: oldDoc.country,
+    stateOrRegion: oldDoc.stateOrRegion,
+    metalType: oldDoc.metalType,
+    currency: oldDoc.currency,
+    pricePerGram,
+    priceUnit: oldDoc.priceUnit,
+    effectiveAt: new Date(),  // VERY IMPORTANT — marks as newest
   });
-  return doc;
+
+  return newDoc;
 }
+
 
 /**
  * Delete an existing price (history delete).
