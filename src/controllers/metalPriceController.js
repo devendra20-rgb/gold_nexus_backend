@@ -133,11 +133,37 @@ async function deleteMetalPriceController(req, res) {
   }
 }
 
+async function getLatestAllMetalsController(req, res) {
+  try {
+    const { country, stateOrRegion } = req.query;
+    if (!country) {
+      return res.status(400).json({ error: "country is required" });
+    }
+
+    const metals = ["gold", "silver", "platinum"];
+    const result = [];
+
+    for (const metal of metals) {
+      const latest = await getLatestPrice({ country, stateOrRegion, metalType: metal });
+      if (latest) {
+        result.push(latest);
+      }
+    }
+
+    return res.json({ prices: result });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to fetch all metals prices" });
+  }
+}
+
+
 module.exports = {
   createMetalPriceController,
   getLatestPriceController,
   getLatestPricesTableController,
   getPriceHistoryController,
   updateMetalPriceController,
-  deleteMetalPriceController
+  deleteMetalPriceController,
+  getLatestAllMetalsController
 };

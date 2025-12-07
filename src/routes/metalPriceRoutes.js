@@ -5,7 +5,8 @@ const {
   getLatestPricesTableController,
   getPriceHistoryController,
   updateMetalPriceController,
-  deleteMetalPriceController
+  deleteMetalPriceController,
+  getLatestAllMetalsController
 } = require("../controllers/metalPriceController");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
@@ -18,6 +19,8 @@ router.delete("/:id", authMiddleware, adminOnly, deleteMetalPriceController);
 
 // Public routes for client-side
 router.get("/latest", getLatestPriceController);
+router.get("/latest-all", getLatestAllMetalsController);
+
 router.get("/latest-table", getLatestPricesTableController);
 router.get("/history", getPriceHistoryController);
 
