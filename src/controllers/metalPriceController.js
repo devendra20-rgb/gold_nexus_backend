@@ -4,7 +4,7 @@ const {
   getLatestPricesTable,
   getPriceHistory,
   updateMetalPrice,
-  deleteMetalPrice
+  deleteMetalPrice,
 } = require("../services/metalPriceService");
 
 async function createMetalPriceController(req, res) {
@@ -15,12 +15,12 @@ async function createMetalPriceController(req, res) {
       metalType,
       currency,
       pricePerGram,
-      effectiveAt
+      effectiveAt,
     } = req.body;
 
     if (!country || !metalType || !currency || !pricePerGram) {
       return res.status(400).json({
-        error: "country, metalType, currency and pricePerGram are required"
+        error: "country, metalType, currency and pricePerGram are required",
       });
     }
 
@@ -30,7 +30,7 @@ async function createMetalPriceController(req, res) {
       metalType,
       currency,
       pricePerGram,
-      effectiveAt
+      effectiveAt,
     });
 
     return res.status(201).json({ message: "Price created", data: doc });
@@ -59,7 +59,7 @@ async function getLatestPriceController(req, res) {
 
     const response = {
       ...latest,
-      displayDate: normalize ? now : latest.effectiveAt
+      displayDate: normalize ? now : latest.effectiveAt,
     };
 
     return res.json(response);
@@ -80,7 +80,9 @@ async function getLatestPricesTableController(req, res) {
     return res.json(rows);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Failed to fetch latest prices table" });
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch latest prices table" });
   }
 }
 
@@ -95,7 +97,7 @@ async function getPriceHistoryController(req, res) {
       country,
       stateOrRegion,
       metalType,
-      limit: limit ? parseInt(limit, 10) : 200
+      limit: limit ? parseInt(limit, 10) : 200,
     });
 
     return res.json(history);
@@ -144,7 +146,11 @@ async function getLatestAllMetalsController(req, res) {
     const result = [];
 
     for (const metal of metals) {
-      const latest = await getLatestPrice({ country, stateOrRegion, metalType: metal });
+      const latest = await getLatestPrice({
+        country,
+        stateOrRegion,
+        metalType: metal,
+      });
       if (latest) {
         result.push(latest);
       }
@@ -157,6 +163,66 @@ async function getLatestAllMetalsController(req, res) {
   }
 }
 
+async function getIndiaPricesTableController(req, res) {
+  try {
+    const states = [
+      "Andhra Pradesh",
+      "Arunachal Pradesh",
+      "Assam",
+      "Bihar",
+      "Chhattisgarh",
+      "Delhi",
+      "Goa",
+      "Gujarat",
+      "Haryana",
+      "Himachal Pradesh",
+      "Jharkhand",
+      "Karnataka",
+      "Kerala",
+      "Madhya Pradesh",
+      "Maharashtra",
+      "Manipur",
+      "Meghalaya",
+      "Mizoram",
+      "Nagaland",
+      "Odisha",
+      "Punjab",
+      "Rajasthan",
+      "Sikkim",
+      "Tamil Nadu",
+      "Telangana",
+      "Tripura",
+      "Uttar Pradesh",
+      "Uttarakhand",
+      "West Bengal",
+      "Jammu and Kashmir",
+    ];
+
+    const metals = ["gold", "silver", "platinum"];
+    const result = [];
+
+    for (const state of states) {
+      const row = { stateOrRegion: state };
+
+      for (const metal of metals) {
+        const latest = await getLatestPrice({
+          country: "IN",
+          stateOrRegion: state,
+          metalType: metal,
+        });
+
+        row[metal] = latest ? latest.pricePerGram : 0;
+      }
+
+      result.push(row);
+    }
+
+    return res.json({ prices: result });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to fetch India table" });
+  }
+}
 
 module.exports = {
   createMetalPriceController,
@@ -165,5 +231,6 @@ module.exports = {
   getPriceHistoryController,
   updateMetalPriceController,
   deleteMetalPriceController,
-  getLatestAllMetalsController
+  getLatestAllMetalsController,
+  getIndiaPricesTableController
 };

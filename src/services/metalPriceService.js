@@ -130,12 +130,11 @@ async function updateMetalPrice(id, { pricePerGram }) {
     currency: oldDoc.currency,
     pricePerGram,
     priceUnit: oldDoc.priceUnit,
-    effectiveAt: new Date(),  // VERY IMPORTANT — marks as newest
+    effectiveAt: new Date(), // VERY IMPORTANT — marks as newest
   });
-
+  await MetalPrice.updateMany({}, { $set: { updatedAt: new Date() } });
   return newDoc;
 }
-
 
 /**
  * Delete an existing price (history delete).

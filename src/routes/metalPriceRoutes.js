@@ -6,7 +6,8 @@ const {
   getPriceHistoryController,
   updateMetalPriceController,
   deleteMetalPriceController,
-  getLatestAllMetalsController
+  getLatestAllMetalsController,
+  getIndiaPricesTableController
 } = require("../controllers/metalPriceController");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
@@ -23,5 +24,7 @@ router.get("/latest-all", getLatestAllMetalsController);
 
 router.get("/latest-table", getLatestPricesTableController);
 router.get("/history", getPriceHistoryController);
+router.get("/india-table", getIndiaPricesTableController);
+
 
 module.exports = router;
