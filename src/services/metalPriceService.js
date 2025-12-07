@@ -96,7 +96,9 @@ async function getPriceHistory({
 }) {
   const query = { country };
 
-  if (stateOrRegion) {
+  if (country === "IN") {
+    query.stateOrRegion = stateOrRegion || "Delhi";
+  } else if (stateOrRegion) {
     query.stateOrRegion = stateOrRegion;
   }
 
@@ -161,7 +163,6 @@ async function createMetalPrice({
   return doc;
 }
 
-
 module.exports = {
   createMetalPrice,
   getLatestPrice,
@@ -169,5 +170,5 @@ module.exports = {
   getPriceHistory,
   updateMetalPrice,
   deleteMetalPrice,
-  fetchCurrencyRates
+  fetchCurrencyRates,
 };
