@@ -7,13 +7,15 @@ const {
   updateMetalPriceController,
   deleteMetalPriceController,
   getLatestAllMetalsController,
-  getIndiaPricesTableController
+  getIndiaPricesTableController,
+  bulkUpdatePricesController
 } = require("../controllers/metalPriceController");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 const router = express.Router();
 
 // Admin-only routes
+router.put("/bulk-update", authMiddleware, adminOnly, bulkUpdatePricesController); // <-- MUST BE FIRST
 router.post("/", authMiddleware, adminOnly, createMetalPriceController);
 router.put("/:id", authMiddleware, adminOnly, updateMetalPriceController);
 router.delete("/:id", authMiddleware, adminOnly, deleteMetalPriceController);
@@ -21,10 +23,8 @@ router.delete("/:id", authMiddleware, adminOnly, deleteMetalPriceController);
 // Public routes for client-side
 router.get("/latest", getLatestPriceController);
 router.get("/latest-all", getLatestAllMetalsController);
-
 router.get("/latest-table", getLatestPricesTableController);
 router.get("/history", getPriceHistoryController);
 router.get("/india-table", getIndiaPricesTableController);
-
 
 module.exports = router;

@@ -5,6 +5,7 @@ const {
   getPriceHistory,
   updateMetalPrice,
   deleteMetalPrice,
+  
 } = require("../services/metalPriceService");
 
 async function createMetalPriceController(req, res) {
@@ -224,6 +225,51 @@ async function getIndiaPricesTableController(req, res) {
   }
 }
 
+async function bulkUpdatePricesController(req, res) {
+  try {
+    const { country, stateOrRegion, prices } = req.body;
+    const MetalPrice = require("../models/MetalPrice");
+
+    if (!country || !prices || !Array.isArray(prices)) {
+      return res.status(400).json({ error: "Invalid data format" });
+    }
+
+    const now = new Date();
+    const currencyMap = {
+      IN: "INR",
+      US: "USD",
+      AE: "AED",
+      UK: "GBP",
+    };
+
+    const currency = currencyMap[country] || "USD";
+
+    for (const p of prices) {
+      if (!p.metalType || typeof p.pricePerGram !== "number") continue;
+
+      await createMetalPrice({
+        country,
+        stateOrRegion,
+        metalType: p.metalType,
+        pricePerGram: p.pricePerGram,
+        currency,             // <-- FIXED
+        effectiveAt: now,
+      });
+    }
+
+    await MetalPrice.updateMany(
+      { country },
+      { $set: { effectiveAt: now } }
+    );
+
+    return res.json({ message: "Bulk update successful", updatedAt: now });
+  } catch (err) {
+    console.error("Bulk Update Error:", err);
+    return res.status(500).json({ error: "Failed to update price" });
+  }
+}
+
+
 module.exports = {
   createMetalPriceController,
   getLatestPriceController,
@@ -232,5 +278,6 @@ module.exports = {
   updateMetalPriceController,
   deleteMetalPriceController,
   getLatestAllMetalsController,
-  getIndiaPricesTableController
+  getIndiaPricesTableController,
+  bulkUpdatePricesController
 };
