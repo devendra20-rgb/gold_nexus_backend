@@ -4,7 +4,7 @@ const MetalPriceSchema = new mongoose.Schema(
   {
     country: {
       type: String,
-      enum: ["IN", "US", "AE", "UK"],   // UK Added
+      enum: ["IN", "US", "AE", "UK"],   
       required: true
     },
     stateOrRegion: {
