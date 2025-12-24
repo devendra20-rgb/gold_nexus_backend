@@ -3,7 +3,8 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const metalPriceRoutes = require("./routes/metalPriceRoutes");
 const currencyRoutes = require("./routes/currencyRoutes");
-
+const articleRoutes = require("./routes/articleRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 const app = express();
 
 app.use(express.json());
@@ -33,5 +34,6 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/metal-prices", metalPriceRoutes);
 app.use("/api/currency", currencyRoutes);
-
+app.use("/api/articles", articleRoutes);
+app.use("/api/categories", categoryRoutes);
 module.exports = app;
