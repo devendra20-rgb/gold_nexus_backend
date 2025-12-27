@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const userAuthRoutes = require("./routes/userAuthRoutes");
 const authRoutes = require("./routes/authRoutes");
 const metalPriceRoutes = require("./routes/metalPriceRoutes");
 const currencyRoutes = require("./routes/currencyRoutes");
@@ -31,6 +32,7 @@ app.get("/api/health", (req, res) => {
 });
 
 // Routes
+app.use("/api/user", userAuthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/metal-prices", metalPriceRoutes);
 app.use("/api/currency", currencyRoutes);
