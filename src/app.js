@@ -6,6 +6,8 @@ const metalPriceRoutes = require("./routes/metalPriceRoutes");
 const currencyRoutes = require("./routes/currencyRoutes");
 const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const horoscopeRoutes = require("./routes/horoscopeRoutes");
+const domandintRoutes = require("./routes/domandintRoutes");
 const app = express();
 
 /* ---------------- BASIC MIDDLEWARE ---------------- */
@@ -62,6 +64,8 @@ app.use("/api/metal-prices", metalPriceRoutes);
 app.use("/api/currency", currencyRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/horoscope", horoscopeRoutes);
+app.use("/api/domandint", domandintRoutes);
 /* ---------------- 404 HANDLER ---------------- */
 app.use((req, res) => {
   res.status(404).json({
