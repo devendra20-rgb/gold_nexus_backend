@@ -116,7 +116,7 @@ async function getArticleController(req, res) {
   }
 }
 
-// 4. Get One (By ID)
+// 4. Get One 
 async function getArticleByIdController(req, res) {
   try {
     console.log("🔍 Finding Article by ID:", req.params.id);
