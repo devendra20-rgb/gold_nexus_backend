@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 /* ---------------- CORS SETUP ---------------- */
 const allowedOrigins = (
   process.env.CORS_ORIGINS ||
-  "http://localhost:3000,https://www.headlines24x7.com,https://headlines24x7.com"
+  "http://localhost:3000,https://www.headlines24x7.com,https://headlines24x7.com,https://goldnexusfrontend.vercel.app/"
 )
   .split(",")
   .map(o => o.trim());
